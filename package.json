@@ -1,0 +1,34 @@
+{
+  "name": "packr",
+  "version": "1.0.0",
+  "description": "Build bundle and patch file from svn repository.",
+  "main": "packr.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yusangeng/packr.git"
+  },
+  "keywords": [
+    "nodejs",
+    "update",
+    "patch",
+    "hybrid"
+  ],
+  "bugs": {
+    "url": "https://github.com/yusangeng/packr/issues"
+  },
+  "homepage": "https://github.com/yusangeng/packr",
+  "license": "MIT",
+  "author": "yusangeng",
+  "dependencies": {
+    "commander": "^2.9.0",
+    "copy-dir": "0.0.8",
+    "dir-compare": "^1.0.1",
+    "node-mkdirs": "0.0.1",
+    "node.svn": "^0.1.8",
+    "promise": "^7.1.1",
+    "zip-folder": "^1.0.0"
+  }
+}
