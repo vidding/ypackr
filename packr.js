@@ -14,17 +14,10 @@ var cp = require('./lib/cp');
 var rmrf = require('./lib/rmrf');
 var $ = path.resolve.bind(path);
 
-function exists(path) {
-	return fs.existsSync(path) || path.existsSync(path);  
-}
-
-function isFile(path) {
-	return exists(path) && fs.statSync(path).isFile();  
-}
-
-function isDir(path) {
-	return exists(path) && fs.statSync(path).isDirectory();  
-}
+var misc = require('./lib/misc');
+var exists = misc.exists;
+var isFile = misc.isFile;
+var isDir = misc.isDir;
 
 function errlog() {
 	var args = Array.prototype.slice.call(arguments, 0);
@@ -123,6 +116,10 @@ function makePatch(currentDir, lastDir, zipname, callback) {
 		return;
 	}
 	
+	if (typeof last === 'undefined') {
+		last = 'none';
+	}
+	
 	if (current === last) {
 		errlog('current equals to last');
 		return;
@@ -134,6 +131,8 @@ function makePatch(currentDir, lastDir, zipname, callback) {
 	var releaseDir = 'bundle_c' + current + '_l' + last + '_release' + releaseTime;
 	// 发布文件名
 	var releaseFilename = releaseDir + '.zip';
+	
+	infolog('Release file name: ' + releaseFilename);
 
 	if (!prefix || prefix === '') {
 		// 如果没有设置prefix，则使用当前目录
@@ -172,8 +171,10 @@ function makePatch(currentDir, lastDir, zipname, callback) {
 				return;
 			}
 
-			if (rmrf($(currentVersionDir, '.svn'))) {
-				reject();
+			var err2 = rmrf($(currentVersionDir, '.svn'));
+			
+			if (err2) {
+				reject(err2);
 				return;
 			}
 
@@ -184,14 +185,22 @@ function makePatch(currentDir, lastDir, zipname, callback) {
 		sectionlog('checkout last version...');
 		
 		return new Promise(function (resolve, reject) {
+			if (last === 'none') {
+				infolog('There is NO last version');
+				resolve();
+				return;
+			}
+			
 			checkout(lastVersionDir, repo, last, function (err) {
 				if (err) {
-					reject();
+					reject(err);
 					return;
 				}
 
-				if (rmrf($(lastVersionDir, '.svn'))) {
-					reject();
+				var err2 = rmrf($(lastVersionDir, '.svn'));
+				
+				if (err2) {
+					reject(err2);
 					return;
 				}
 
@@ -205,7 +214,7 @@ function makePatch(currentDir, lastDir, zipname, callback) {
 		return new Promise(function (resolve, reject) {
 			makeBundle(currentVersionDir, $(prefix, 'bundle.zip'), function (err) {
 				if (err) {
-					reject();
+					reject(err);
 					return;
 				}
 				
@@ -217,9 +226,15 @@ function makePatch(currentDir, lastDir, zipname, callback) {
 		sectionlog('make patch...');
 		
 		return new Promise(function (resolve, reject) {
+			if (last === 'none') {
+				infolog('There is NO last version');
+				resolve();
+				return;
+			}
+
 			makePatch(currentVersionDir, lastVersionDir, $(prefix, 'patch.zip'), function (err) {
 				if (err) {
-					reject();
+					reject(err);
 					return;
 				}
 				
@@ -233,7 +248,7 @@ function makePatch(currentDir, lastDir, zipname, callback) {
 		return new Promise(function (resolve, reject) {
 			var err = fs.rename(currentVersionDir, $(prefix, 'web'), function (err) {
 				if (err) {
-					reject();
+					reject(err);
 				} else {
 					resolve();
 				}
@@ -247,14 +262,14 @@ function makePatch(currentDir, lastDir, zipname, callback) {
 			var update = {
 				releaseTime : releaseTime,
 				version : current,
-				last : last
+				lastVersion : (last === 'none') ? -1 : last
 			};
 			
 			try {
 				var updateStr = JSON.stringify(update);
 				fs.writeFileSync($(prefix, 'update.json'), updateStr);
 			} catch (err) {
-				reject();
+				reject(err);
 				return;
 			}
 			
@@ -266,19 +281,19 @@ function makePatch(currentDir, lastDir, zipname, callback) {
 
 		return new Promise(function (resolve, reject) {
 			var err = rmrf(lastVersionDir);
-			
+
 			if (err) {
-				reject();
+				reject(err);
 				return;
 			}
-			
+
 			err = rmrf($(prefix, 'patch'));
-			
+
 			if (err) {
-				reject();
+				reject(err);
 				return;
 			}
-			
+
 			resolve();
 		});
 	}).then(function () {
@@ -300,8 +315,9 @@ function makePatch(currentDir, lastDir, zipname, callback) {
 			});
 		});
 	}).then(function () {
-		console.log('build success');
-	}, function () {
+		infolog('build success');
+	}, function (err) {
+		errlog(err);
 		errlog('build error');
 	});
 })();
