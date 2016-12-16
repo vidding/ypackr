@@ -1,3 +1,10 @@
+#!/usr/bin/env node
+
+/**
+ * @file index.js
+ * @author Y3G
+ */
+
 var fs = require('fs');
 var path = require('path');
 

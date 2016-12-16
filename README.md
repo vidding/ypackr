@@ -1,34 +1,31 @@
-# 静态资源打包工具（packr）使用说明
+# 静态资源打包工具（ypackr）使用说明
 
 ## 综述
 
-packr 是专为移动 app 混合开发设计的 web 静态资源打包工具。
+ypackr 是专为移动 app 混合开发设计的 web 静态资源打包工具。
 
-packr 通过比较两个 svn 版本的区别（目前还不支持 git），将静态资源项目打包为全量更新包、增量更新包，以及线上资源目录，同时生成版本信息 update.json。
+ypackr 通过比较两个 svn 版本的区别（目前还不支持 git），将静态资源项目打包为全量更新包、增量更新包，以及线上资源目录，同时生成版本信息 update.json。
 
 ## 运行环境
 
-* packr 基于 nodejs 实现，使用前请先安装 nodejs。
-* packr 依赖的 npm 模块需要联网安装，请确保连入互联网。
-* packr 依赖 svn 命令行工具，使用前请安装 svn 并确保环境变量 Path 中有相关目录。
-* packr 没有 svn 账户设置入口，使用前请确保 svn 已经保存了可用的账户名。
-* packr 为命令行工具，使用前请确保环境变量 Path 中有 packr 根目录。
+* ypackr 基于 nodejs 实现，使用前请先安装 nodejs。
+* ypackr 依赖的 npm 模块需要联网安装，请确保连入互联网。
+* ypackr 依赖 svn 命令行工具，使用前请安装 svn 并确保环境变量 Path 中有相关目录。
+* ypackr 没有 svn 账户设置入口，使用前请确保 svn 已经保存了可用的账户名。
+* ypackr 为命令行工具，使用前请确保环境变量 Path 中有 ypackr 根目录。
 
-## 运行前准备
-
-假设 packr 根目录为 /usr/local/packr
+## 安装
 
 ```
-cd /usr/local/packr
-npm install
+npm install -g ypackr
 ```
 
 ## 命令参数
 
-packr 命令格式如下：
+ypackr 命令格式如下：
 
 ```
-packr -p=${prefix} -c=${currentVersion} -l=${lastVersion} -r=${repositoryURL}
+ypackr -p=${prefix} -c=${currentVersion} -l=${lastVersion} -r=${repositoryURL}
 ```
 
 其中：
@@ -40,7 +37,7 @@ packr -p=${prefix} -c=${currentVersion} -l=${lastVersion} -r=${repositoryURL}
 
 ## 输出
 
-packr 输出为一个 zip 压缩包，其中有如下文件或目录：
+ypackr 输出为一个 zip 压缩包，其中有如下文件或目录：
 
 * bundle.zip 新发布版本的全量更新包。
 * patch.zip 增量更新包，其中有新增和改动过的文件。

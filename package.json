@@ -1,14 +1,13 @@
 {
   "name": "ypackr",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "Build bundle and patch file from svn repository.",
-  "main": "packr.js",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "bin": {
-    "ypackr": "packr.js",
-	"packr": "packr.js"
+    "ypackr": "index.js"
   },
   "repository": {
     "type": "git",
