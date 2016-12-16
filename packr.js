@@ -99,7 +99,7 @@ function makePatch(currentDir, lastDir, zipname, callback) {
 }
 
 (function main() {
-	program.version('1.2.0')
+	program.version('1.2.1')
 		.option('-p, --prefix <string>', 'Output prefix')
 		.option('-c, --current <n>', 'Current version', parseInt)
 		.option('-l, --last <n>', 'Last version', parseInt)
