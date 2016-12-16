@@ -10,14 +10,15 @@ var diff = require('dir-compare').compareSync;
 
 require('./lib/date.format');
 
-var cp = require('./lib/cp');
-var rmrf = require('./lib/rmrf');
-var $ = path.resolve.bind(path);
+var fileUtils = require('./lib/fileUtils');
+var cp = fileUtils.cp;
+var rmrf = fileUtils.rmrf;
 
-var misc = require('./lib/misc');
-var exists = misc.exists;
-var isFile = misc.isFile;
-var isDir = misc.isDir;
+var exists = fileUtils.exists;
+var isFile = fileUtils.isFile;
+var isDir = fileUtils.isDir;
+
+var $ = path.resolve.bind(path);
 
 function errlog() {
 	var args = Array.prototype.slice.call(arguments, 0);
@@ -98,13 +99,12 @@ function makePatch(currentDir, lastDir, zipname, callback) {
 }
 
 (function main() {
-	program.version('1.0.0')
+	program.version('1.2.0')
 		.option('-p, --prefix <string>', 'Output prefix')
 		.option('-c, --current <n>', 'Current version', parseInt)
 		.option('-l, --last <n>', 'Last version', parseInt)
 		.option('-r, --repository <string>', 'Repository URL')
 		.parse(process.argv);
-
 
 	var prefix = program.prefix;
 	var current = program.current;

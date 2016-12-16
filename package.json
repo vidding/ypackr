@@ -1,10 +1,13 @@
 {
   "name": "packr",
-  "version": "1.0.0",
+  "version": "1.2.0",
   "description": "Build bundle and patch file from svn repository.",
   "main": "packr.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "bin": {
+    "packr": "packr.js"
   },
   "repository": {
     "type": "git",
